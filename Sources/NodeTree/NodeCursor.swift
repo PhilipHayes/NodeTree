@@ -11,7 +11,7 @@ public class NodeCursor<T:Codable> {
 	var cursor:Node<T>?
 	
 	
-	var value:T? {
+	public var value:T? {
 		get {
 			return cursor?.data
 		}

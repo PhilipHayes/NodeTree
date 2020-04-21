@@ -14,6 +14,14 @@ final class NodeTreeTests: XCTestCase {
 		XCTAssert(cursor.getNexts()?.count == 1, "Insert failed")
 		XCTAssert(cursor.move(next: 0).getPrevs()?.count == 1, "Bi-directional link failed")
 	}
+	func testChangeCursorValue() {
+		let node = Node(Day(index:0))
+		let cursor = NodeCursor(node)
+		
+		cursor.value?.index = 99
+		dump(cursor.value)
+		XCTAssert(cursor.value?.index == 99, "Value was not set to 99")
+	}
     func testCheckPrev() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
