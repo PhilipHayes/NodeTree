@@ -1,5 +1,8 @@
 import Foundation
+public typealias Condition<T:Codable> = (Node<T>)->(Bool)
+
 public class Node<T:Codable> : Identifiable, Codable {
+
 	public var id:String = UUID().uuidString
 	var next:Array<Node<T>>?
 	var previous:Array<Node<T>>?
@@ -78,7 +81,7 @@ public class Node<T:Codable> : Identifiable, Codable {
 
 	}
 	
-	public func checkPrev(conditions:[(Node<T>)->(Bool)]) -> [Bool] {
+	public func checkPrev(conditions:[Condition<T>]) -> [Bool] {
 		var node:Node<T>? = self
 		var results = [Bool](repeating: false, count: conditions.count)
 		while node != nil {
@@ -89,7 +92,7 @@ public class Node<T:Codable> : Identifiable, Codable {
 		return results
 	}
 	
-	public func check(conditions:[(Node<T>)->(Bool)], results:inout [Bool]) -> [Bool] {
+	public func check(conditions:[Condition<T>], results:inout [Bool]) -> [Bool] {
 			
 		for p in conditions.enumerated() {
 			if p.element(self) {
@@ -100,7 +103,7 @@ public class Node<T:Codable> : Identifiable, Codable {
 		return results
 	}
 	
-	public func check(conditions:[(Node<T>)->(Bool)]) -> [Bool] {
+	public func check(conditions:[Condition<T>]) -> [Bool] {
 		var results = [Bool](repeating: false, count: conditions.count)
 			
 		for p in conditions.enumerated() {

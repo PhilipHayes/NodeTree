@@ -84,11 +84,11 @@ public class NodeCursor<T:Codable> {
 		cursor?.log()
 		return self
 	}
-	public func check(_ conditions:[(Node<T>)->(Bool)]) -> [Bool]? {
+	public func check(_ conditions:[Condition<T>]) -> [Bool]? {
 		
 		return cursor?.check(conditions: conditions)
 	}
-	public func checkPrev(_ conditions:[(Node<T>)->(Bool)]) -> [Bool]? {
+	public func checkPrev(_ conditions:[Condition<T>]) -> [Bool]? {
 		
 		return cursor?.checkPrev(conditions: conditions)
 	}
