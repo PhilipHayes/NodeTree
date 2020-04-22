@@ -46,6 +46,18 @@ public class NodeCursor<T:Codable> {
 		cursor?.setPrev(node: Node(prev))
 		return self
 	}
+	public func add(next:Node<T>) -> Self {
+		cursor?.addNext(node: next)
+		return self
+	}
+	public func add(prev:Node<T>) -> Self {
+		cursor?.addPrev(node: prev)
+		return self
+	}
+	public func set(prev:Node<T>) -> Self {
+		cursor?.setPrev(node: prev)
+		return self
+	}
 	public func remove(prev:Int? = nil) {
 		cursor?.removePrev(index: prev)
 	}
@@ -66,6 +78,7 @@ public class NodeCursor<T:Codable> {
 	public func root() -> Self {
 		var cur = cursor
 		var ids = Set<String>()
+		ids.insert(cursor?.id ?? "")
 		while let node = cur?.previous?.first {
 			guard ids.insert(node.id).inserted == true else {
 				break
@@ -81,7 +94,8 @@ public class NodeCursor<T:Codable> {
 		return self
 	}
 	public func log() -> Self {
-		cursor?.log()
+		var ids:Set<String> = []
+		cursor?.log(&ids)
 		return self
 	}
 	public func check(_ conditions:[Predicate<T>]) -> [Bool]? {

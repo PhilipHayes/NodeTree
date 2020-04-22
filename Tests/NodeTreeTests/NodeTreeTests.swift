@@ -22,6 +22,8 @@ final class NodeTreeTests: XCTestCase {
 		dump(cursor.value)
 		XCTAssert(cursor.value?.index == 99, "Value was not set to 99")
 	}
+	
+	
     func testCheckPrev() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
@@ -43,7 +45,6 @@ final class NodeTreeTests: XCTestCase {
 						return $0.data?.index == 0
 						
 						}])
-		
 		cursor.root().log()
 		//No prior node has an index of 0
 		XCTAssert(results == [true], "False negative.")
@@ -51,7 +52,36 @@ final class NodeTreeTests: XCTestCase {
 		
 		
     }
-	
+	func testCheckPrevLoop() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct
+        // results.
+		
+		let head = Node(Day(index:0))
+		let cursor = NodeCursor(head)
+		
+		let results = cursor.add(next: Day(index: 1))
+			.add(next: Day(index: 1, weather: 1))
+			.add(next: Day(index: 1, weather: 2))
+			.add(next: Day(index: 1, weather: 3))
+				.move(next: 1)
+				.add(next: Day(index: 2))
+				.add(next: Day(index: 2))
+			.move(next: 0)
+			.add(next:head)
+			.checkPrev([{
+						print($0.data?.index)
+						return $0.data?.index == 0
+						
+						}])
+		print("------Root")
+		cursor.root().log()
+		//No prior node has an index of 0
+		XCTAssert(results == [true], "False negative, and infinite loop.")
+				
+		
+		
+    }
     static var allTests = [
         ("testCheckPrev", testCheckPrev),
     ]

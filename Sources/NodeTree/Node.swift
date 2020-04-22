@@ -1,8 +1,10 @@
 import Foundation
 public typealias Predicate<T:Codable> = (Node<T>)->(Bool)
+public struct NodeSettings {
+	static public var allowsMultiplePreviousLinks = false
 
+}
 public class Node<T:Codable> : Identifiable, Codable {
-
 	public var id:String = UUID().uuidString
 	var next:Array<Node<T>>?
 	var previous:Array<Node<T>>?
@@ -12,17 +14,16 @@ public class Node<T:Codable> : Identifiable, Codable {
 		self.data = value
 	}
 	
-	public func log() {
-		var ids = Set<String>()
-
+	public func log(_ ids:inout Set<String>) {
+		var ids = ids
 		print("Value: \(data)")
 		if let nexts = next {
 			print("nexts [\(nexts.map {$0.id})])")
-			nexts.forEach {
-				guard ids.insert($0.id).inserted else {
+			for next in nexts {
+				guard ids.insert(next.id).inserted else {
 					return
 				}
-				$0.log()
+				next.log(&ids)
 				
 			}
 
@@ -33,12 +34,16 @@ public class Node<T:Codable> : Identifiable, Codable {
 		guard index >= 0 && index < next.count else {return nil}
 		return next[index]
 	}
-	public func addNext(node:Node<T>) {
-		if next == nil {
-			next = []
+	public func addNext(node:Node<T>, additive:Bool = NodeSettings.allowsMultiplePreviousLinks) {
+		guard next?.contains(where: {$0.id == node.id}) ?? false == false else {return}
+		next = (next ?? []) + [node]
+
+		if additive {
+			node.addPrev(node: self)
+		} else {
+			node.setPrev(node: self)
 		}
-		next?.append(node)
-		node.previous = [self]
+		
 	}
 	public func getPrevious(index:Int? = nil) -> Node<T>? {
 		guard let prev = previous else {return nil}
@@ -47,27 +52,15 @@ public class Node<T:Codable> : Identifiable, Codable {
 		return prev[index]
 	}
 	public func setPrev(node:Node<T>) {
+		guard previous?.contains(where:{$0.id == node.id}) ?? false == false else {return}
 		previous = [node]
-		if node.next == nil {
-			node.next = [self]
-		} else {
-			node.next?.append(self)
-
-		}
+		node.addNext(node: self)
 	}
 	public func addPrev(node:Node<T>) {
-		if previous == nil {
-			previous = [node]
-		} else {
-			previous?.append(node)
+		guard previous?.contains(where:{$0.id == node.id}) ?? false == false else {return}
 
-		}
-		if node.next == nil {
-			node.next = [self]
-		} else {
-			node.next?.append(self)
-
-		}
+		previous = (previous ?? []) + [node]
+		node.addNext(node: self)
 		
 	}
 	public func removePrev(index:Int? = nil) {
@@ -83,11 +76,10 @@ public class Node<T:Codable> : Identifiable, Codable {
 	
 	public func checkPrev(conditions:[Predicate<T>]) -> [Bool] {
 		var ids = Set<String>()
-
 		var node:Node<T>? = self
 		var results = [Bool](repeating: false, count: conditions.count)
 		while node != nil {
-			guard ids.insert(node?.id ?? "").inserted == true {else break}
+			guard ids.insert(node?.id ?? "").inserted == true else {break}
 			node?.check(conditions: conditions, results: &results)
 			node = node?.getPrevious()
 			
