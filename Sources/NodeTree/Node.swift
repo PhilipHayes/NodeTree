@@ -4,16 +4,39 @@ public struct NodeSettings {
 	static public var allowsMultiplePreviousLinks = false
 
 }
+@dynamicMemberLookup
 public class Node<T> : Identifiable {
 	public var id:String = UUID().uuidString
 	var next:Array<Node<T>>?
 	var previous:Array<Node<T>>?
 	
-	var data:T?
-	public init(_ value:T? = nil) {
+	var data:T
+	public init(_ value:T) {
 		self.data = value
 	}
 	
+	public subscript<Value>(dynamicMember keyPath: KeyPath<T, Value>) -> Value? {
+        get { data[keyPath: keyPath] }
+    }
+	public subscript<Value>(dynamicMember keyPath: KeyPath<T, Value>) -> Value {
+        get { data[keyPath: keyPath] }
+    }
+	public subscript<Value>(dynamicMember keyPath: WritableKeyPath<T, Value?>) -> Value? {
+        get { data[keyPath: keyPath] }
+        set { data[keyPath: keyPath] = newValue }
+    }
+	public subscript<Value>(dynamicMember keyPath: WritableKeyPath<T, Value>) -> Value {
+        get { data[keyPath: keyPath] }
+        set { data[keyPath: keyPath] = newValue }
+    }
+	public subscript<Value>(dynamicMember keyPath: ReferenceWritableKeyPath<T, Value?>) -> Value? {
+        get { data[keyPath: keyPath] }
+        set { data[keyPath: keyPath] = newValue }
+    }
+	public subscript<Value>(dynamicMember keyPath: ReferenceWritableKeyPath<T, Value>) -> Value {
+        get { data[keyPath: keyPath] }
+        set { data[keyPath: keyPath] = newValue }
+    }
 	public func log(_ ids:inout Set<String>) {
 		var ids = ids
 		print("Value: \(data)")

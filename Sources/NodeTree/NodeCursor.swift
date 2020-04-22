@@ -6,19 +6,81 @@
 //
 
 import Foundation
+@dynamicMemberLookup
 public class NodeCursor<T> {
 	///The current location in a given tree tree
 	var cursor:Node<T>?
-	
-	
-	public var value:T? {
+
+	public subscript<Value>(dynamicMember keyPath: KeyPath<T, Value>) -> Value? {
+
 		get {
-			return cursor?.data
+			guard let cursor = cursor else {return nil}
+
+			return cursor.data[keyPath: keyPath]
+			
+		}
+    }
+	
+	public subscript<Value>(dynamicMember keyPath: WritableKeyPath<T, Value?>) -> Value? {
+		get {
+			guard let cursor = cursor else {return nil}
+
+			return cursor.data[keyPath: keyPath]
+			
 		}
 		set {
-			cursor?.data = newValue ?? nil
+			guard let cursor = cursor else {return}
+
+			cursor.data[keyPath: keyPath] = newValue
+			
 		}
-	}
+    }
+	
+	public subscript<Value>(dynamicMember keyPath: WritableKeyPath<T, Value>) -> Value? {
+
+		get {
+			guard let cursor = cursor else {return nil}
+
+			return cursor.data[keyPath: keyPath]
+			
+		}
+		set {
+			guard let cursor = cursor else {return}
+			guard let v = newValue else {return}
+			cursor.data[keyPath: keyPath] = v
+			
+		}
+    }
+	public subscript<Value>(dynamicMember keyPath: ReferenceWritableKeyPath<T, Value?>) -> Value? {
+		get {
+			guard let cursor = cursor else {return nil}
+
+			return cursor.data[keyPath: keyPath]
+			
+		}
+		set {
+			guard let cursor = cursor else {return}
+
+			cursor.data[keyPath: keyPath] = newValue
+			
+		}
+    }
+	
+	public subscript<Value>(dynamicMember keyPath: ReferenceWritableKeyPath<T, Value>) -> Value? {
+
+		get {
+			guard let cursor = cursor else {return nil}
+
+			return cursor.data[keyPath: keyPath]
+			
+		}
+		set {
+			guard let cursor = cursor else {return}
+			guard let v = newValue else {return}
+			cursor.data[keyPath: keyPath] = v
+			
+		}
+    }
 	public init(_ node:Node<T>? = nil) {
 		cursor = node
 	}

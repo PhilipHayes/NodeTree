@@ -4,6 +4,8 @@ import Foundation
 struct Day : Codable {
 	var index:Int?
 	var weather:Int?
+	var power:Int = 10
+	let constant:Int = 100
 }
 final class NodeTreeTests: XCTestCase {
 	func testAddNext() {
@@ -18,11 +20,16 @@ final class NodeTreeTests: XCTestCase {
 		let node = Node(Day(index:0))
 		let cursor = NodeCursor(node)
 		
-		cursor.value?.index = 99
-		dump(cursor.value)
-		XCTAssert(cursor.value?.index == 99, "Value was not set to 99")
+		cursor.index = 99
+		dump(cursor)
+		XCTAssert(cursor.index == 99, "Value was not set to 99")
 	}
-	
+	func testConstantCursorValue() {
+		let node = Node(Day(index:0))
+		let cursor = NodeCursor(node)
+		
+		XCTAssert(cursor.constant == 100, "Value was not set to 100")
+	}
 	
     func testCheckPrev() {
         // This is an example of a functional test case.
@@ -41,8 +48,8 @@ final class NodeTreeTests: XCTestCase {
 				.add(next: Day(index: 2))
 					.move(next: 0)
 					.checkPrev([{
-						print($0.data?.index)
-						return $0.data?.index == 0
+						print($0.index)
+						return $0.index == 0
 						
 						}])
 		cursor.root().log()
@@ -70,14 +77,14 @@ final class NodeTreeTests: XCTestCase {
 			.move(next: 0)
 			.add(next:head)
 			.checkPrev([{
-						print($0.data?.index)
-						return $0.data?.index == 0
+				print($0.index)
+				return $0.index == 0
 						
 						}])
 		print("------Root")
 		cursor.root().log()
 		//No prior node has an index of 0
-		XCTAssert(results == [true], "False negative, and infinite loop.")
+		XCTAssert(results == [true], "False negative")
 				
 		
 		
