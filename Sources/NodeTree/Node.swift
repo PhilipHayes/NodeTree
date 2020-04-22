@@ -82,18 +82,21 @@ public class Node<T:Codable> : Identifiable, Codable {
 	}
 	
 	public func checkPrev(conditions:[Predicate<T>]) -> [Bool] {
+		var ids = Set<String>()
+
 		var node:Node<T>? = self
 		var results = [Bool](repeating: false, count: conditions.count)
 		while node != nil {
-			
+			guard ids.insert(node?.id ?? "").inserted == true {else break}
 			node?.check(conditions: conditions, results: &results)
 			node = node?.getPrevious()
+			
 		}
 		return results
 	}
 	
 	public func check(conditions:[Predicate<T>], results:inout [Bool]) -> [Bool] {
-			
+		
 		for p in conditions.enumerated() {
 			if p.element(self) {
 				results[p.offset] = true
