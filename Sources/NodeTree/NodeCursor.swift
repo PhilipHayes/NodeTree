@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public class NodeCursor<T:Codable> {
+public class NodeCursor<T> {
 	///The current location in a given tree tree
 	var cursor:Node<T>?
 	

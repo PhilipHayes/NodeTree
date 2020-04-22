@@ -1,10 +1,10 @@
 import Foundation
-public typealias Predicate<T:Codable> = (Node<T>)->(Bool)
+public typealias Predicate<T> = (Node<T>)->(Bool)
 public struct NodeSettings {
 	static public var allowsMultiplePreviousLinks = false
 
 }
-public class Node<T:Codable> : Identifiable, Codable {
+public class Node<T> : Identifiable {
 	public var id:String = UUID().uuidString
 	var next:Array<Node<T>>?
 	var previous:Array<Node<T>>?
