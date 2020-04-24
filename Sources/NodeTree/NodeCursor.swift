@@ -10,7 +10,16 @@ import Foundation
 public class NodeCursor<T> {
 	///The current location in a given tree tree
 	var cursor:Node<T>?
-
+    var data:T? {
+        get {
+        cursor?.data
+        }
+        set {
+            guard let cursor = cursor else {return}
+            guard let v = newValue else {return}
+            cursor.data = v
+        }
+    }
 	public subscript<Value>(dynamicMember keyPath: KeyPath<T, Value>) -> Value? {
 
 		get {

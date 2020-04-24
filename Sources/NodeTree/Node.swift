@@ -10,7 +10,7 @@ public class Node<T> : Identifiable {
 	var next:Array<Node<T>>?
 	var previous:Array<Node<T>>?
 	
-	var data:T
+	public var data:T
 	public init(_ value:T) {
 		self.data = value
 	}

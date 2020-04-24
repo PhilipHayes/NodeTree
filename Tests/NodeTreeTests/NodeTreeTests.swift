@@ -16,6 +16,22 @@ final class NodeTreeTests: XCTestCase {
 		XCTAssert(cursor.getNexts()?.count == 1, "Insert failed")
 		XCTAssert(cursor.move(next: 0).getPrevs()?.count == 1, "Bi-directional link failed")
 	}
+    func testGetData() {
+        let node = Node(Day(index:0))
+        let cursor = NodeCursor(node)
+        
+        cursor.index = 99
+        dump(cursor.data)
+        XCTAssert(cursor.data != nil, "Value was not set")
+    }
+    func testSetData() {
+        let node = Node(Day(index:0))
+        let cursor = NodeCursor(node)
+        
+        cursor.data?.index = 99
+        dump(cursor.data)
+        XCTAssert(cursor.data?.index == 99, "Value was not set")
+    }
 	func testChangeCursorValue() {
 		let node = Node(Day(index:0))
 		let cursor = NodeCursor(node)
