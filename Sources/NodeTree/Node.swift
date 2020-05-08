@@ -5,7 +5,7 @@ public struct NodeSettings {
 
 }
 @dynamicMemberLookup
-public class Node<T> : Identifiable {
+open class Node<T> : Identifiable {
 	public var id:String = UUID().uuidString
 	var next:Array<Node<T>>?
 	var previous:Array<Node<T>>?
